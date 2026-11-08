@@ -1,0 +1,1215 @@
+/* audiobookey app styles.
+   Rules honored here:
+   - every color, size, shadow, motion value comes from tokens.css, no literals
+   - base styles are the phone layout, wider screens layer on with min-width
+   - eight states: default, hover, focus-visible, active, disabled, loading,
+     error, readonly; loading keeps full strength (spinner, never dimmed)
+   - one focal element per screen: the continue card on the library
+   - full hairline borders on cards, no one-sided accent bars
+   - no emoji, no dashes in UI copy */
+
+/* ---------- base: this IS the phone layout ---------- */
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+/* the inline sprite must not take layout space on any renderer */
+svg[hidden], .sprite { display: none; }
+
+/* `hidden` attribute must win over any display rule (spinner was stuck on) */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-size: var(--step-0);
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Every view spans the window: the shelf, the continue card and the player all
+   put the horizontal room to work instead of parking a narrow column in the
+   middle of a wide screen. Padding keeps the text off the edges. */
+.view {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: var(--space-5) clamp(1rem, 3.2vw, 4rem) var(--space-9);
+}
+
+/* The player is the one view that needs the whole window: the source PDF sits
+   beside the controls, so the library's 52rem column would leave most of a wide
+   screen empty. Everything still stays centred and padded on huge displays. */
+.view--player {
+  max-width: none;
+  width: 100%;
+  padding: var(--space-4) clamp(var(--space-4), 2.5vw, var(--space-8)) var(--space-9);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  max-width: none;
+  margin: 0 auto;
+  padding: var(--space-4) clamp(var(--space-4), 2.5vw, var(--space-8));
+}
+
+.brand {
+  font-size: var(--step-1);
+  color: var(--color-ink);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.page-title {
+  font-size: var(--step-2);
+  font-weight: normal;
+  margin: 0 0 var(--space-5);
+}
+
+.eyebrow {
+  font-size: var(--step-n1);
+  font-family: Verdana, "Segoe UI", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-muted);
+  margin: var(--space-7) 0 var(--space-3);
+}
+
+.eyebrow:first-child { margin-top: 0; }
+
+/* ---------- icons ---------- */
+
+.icon {
+  width: var(--icon);
+  height: var(--icon);
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.icon-lg {
+  width: calc(var(--icon) * 1.25);
+  height: calc(var(--icon) * 1.25);
+}
+
+.spin { animation: rotate 900ms linear infinite; }
+
+@keyframes rotate { to { transform: rotate(360deg); } }
+
+/* focus ring, shared by everything interactive */
+:focus-visible {
+  outline: calc(var(--border) * 2) solid var(--color-accent);
+  outline-offset: calc(var(--pr-space-1) / 2);
+  border-radius: var(--radius);
+}
+
+/* ---------- buttons: default, hover, focus, active, disabled, loading ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  padding: 0 var(--space-4);
+  border: var(--border) solid transparent;
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: var(--step-0);
+  color: var(--color-ink);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+
+.btn:hover { background: var(--color-sunken); }
+
+.btn:active { transform: translateY(1px); }
+
+.btn[disabled] {
+  color: var(--color-ink-muted);
+  border-color: var(--color-line);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+/* loading state: full strength, spinner replaces the label */
+.btn.is-loading { cursor: progress; color: var(--color-ink-muted); }
+.btn.is-loading .btn-label { visibility: hidden; }
+.btn .spin { display: none; }
+.btn.is-loading .spin { display: block; }
+
+.btn--accent {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.btn--accent:hover { background: var(--color-accent); filter: brightness(1.08); }
+.btn--accent:active { filter: brightness(0.94); }
+
+.btn--accent[disabled] {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  opacity: 0.4;
+  border-color: transparent;
+}
+
+.btn--secondary {
+  border-color: var(--color-line-strong);
+  background: transparent;
+}
+
+.btn--danger {
+  color: var(--color-danger);
+  border-color: transparent;
+  background: transparent;
+}
+
+.btn--danger:hover {
+  color: var(--color-on-danger);
+  background: var(--color-danger);
+}
+
+.btn--ghost { color: var(--color-ink-muted); }
+
+.btn--ghost:hover { color: var(--color-ink); }
+
+.btn--play {
+  width: calc(var(--tap) * 1.5);
+  height: calc(var(--tap) * 1.5);
+  border-radius: 50%;
+  padding: 0;
+}
+
+.btn--play .icon-pause { display: none; }
+.btn--play[aria-pressed="true"] .icon-play { display: none; }
+.btn--play[aria-pressed="true"] .icon-pause { display: block; }
+
+/* buffering: the spinner replaces the play/pause glyph (never both icons at
+   once) and the button keeps full contrast, nothing is dimmed */
+.btn--play[data-buffering="true"] .icon-play,
+.btn--play[data-buffering="true"] .icon-pause { display: none; }
+.btn--play[data-buffering="true"] #pl-buffer { display: block; }
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+
+.icon-btn:hover { background: var(--color-sunken); }
+.icon-btn:active { transform: translateY(1px); }
+.icon-btn[disabled] { color: var(--color-ink-muted); cursor: not-allowed; }
+.icon-btn[aria-pressed="true"] { color: var(--color-accent); }
+
+.link,
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.link:hover,
+.link-btn:hover { text-decoration-thickness: 2px; }
+
+/* ---------- theme toggle: pill flip switch ----------
+   Presentation only; the state source of truth stays html[data-theme] and
+   the knob follows it, including the no-override system-dark case. */
+
+.flip-switch {
+  --flip-size: calc(var(--tap) * 0.75);
+  --flip-pad: var(--space-1);
+  --flip-x: 0;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  width: calc(var(--flip-size) * 2);
+  height: var(--flip-size);
+  padding: 0 var(--flip-pad);
+  border: none;
+  border-radius: calc(var(--flip-size) / 2);
+  background: var(--color-sunken);
+  color: var(--color-on-accent);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.flip-switch:hover { background: var(--color-track); }
+.flip-switch:active { transform: translateY(1px); }
+
+html[data-theme="dark"] .flip-switch { --flip-x: var(--flip-size); }
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .flip-switch { --flip-x: var(--flip-size); }
+}
+
+.flip-knob {
+  position: relative;
+  width: calc(var(--flip-size) - var(--flip-pad) * 2);
+  height: calc(var(--flip-size) - var(--flip-pad) * 2);
+  border-radius: 50%;
+  background: var(--color-accent);
+  transform: translateX(var(--flip-x));
+  transition: transform var(--dur-base) var(--ease);
+}
+
+.flip-icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.flip-icon--sun { display: none; }
+
+html[data-theme="dark"] .flip-icon--sun { display: block; }
+html[data-theme="dark"] .flip-icon--moon { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .flip-icon--sun { display: block; }
+  html:not([data-theme="light"]) .flip-icon--moon { display: none; }
+}
+
+/* ---------- inputs: default, focus, error, readonly, disabled ---------- */
+
+.field {
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+.field label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--step-n1);
+  font-family: Verdana, "Segoe UI", sans-serif;
+  color: var(--color-ink-muted);
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+input[type="file"] {
+  width: 100%;
+  min-height: calc(var(--tap) * 0.75);
+  padding: var(--space-2) var(--space-3);
+  border: var(--border) solid var(--color-line-strong);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font: inherit;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+input:hover, textarea:hover { border-color: var(--color-ink-muted); }
+
+input:focus-visible, textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 var(--pr-border) var(--color-accent);
+}
+
+input:disabled, textarea:disabled {
+  background: var(--color-sunken);
+  color: var(--color-ink-muted);
+  cursor: not-allowed;
+}
+
+input[readonly], textarea[readonly] {
+  border-style: dotted;
+  color: var(--color-ink-muted);
+  background: var(--color-sunken);
+}
+
+.is-invalid { border-color: var(--color-danger) !important; }
+
+.field-error {
+  margin: var(--space-1) 0 0;
+  font-size: var(--step-n1);
+  color: var(--color-danger);
+}
+
+.field-hint {
+  margin: var(--space-1) 0 0;
+  font-size: var(--step-n1);
+  color: var(--color-ink-muted);
+}
+
+.form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border) solid var(--color-danger);
+  border-radius: var(--radius);
+  color: var(--color-danger);
+  font-size: var(--step-n1);
+}
+
+/* ---------- file input: native control hidden, themed button ---------- */
+
+.file-field {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+input[type="file"].file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* the visually hidden input stays focusable; its ring paints the button */
+.file-input:focus-visible + .file-btn {
+  outline: calc(var(--border) * 2) solid var(--color-accent);
+  outline-offset: calc(var(--pr-space-1) / 2);
+}
+
+.file-input.is-invalid + .file-btn {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.file-name {
+  font-size: var(--step-n1);
+  color: var(--color-ink-muted);
+  overflow-wrap: anywhere;
+}
+
+/* radio pills (voice, quality): no native selects in this app */
+.choice-group {
+  border: none;
+  padding: 0;
+  margin: 0 0 var(--space-4);
+}
+
+.choice-group legend {
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font-size: var(--step-n1);
+  font-family: Verdana, "Segoe UI", sans-serif;
+  color: var(--color-ink-muted);
+}
+
+.pills { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.pill-blind {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pill-btn {
+  min-height: calc(var(--tap) * 0.75);
+  padding: 0 var(--space-4);
+  border: var(--border) solid var(--color-line-strong);
+  border-radius: calc(var(--radius) * 3);
+  background: transparent;
+  font: inherit;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+
+.pill-btn:hover { background: var(--color-sunken); }
+
+.pill-btn[aria-pressed="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.pill-btn[disabled] {
+  color: var(--color-ink-muted);
+  border-color: var(--color-line);
+  cursor: not-allowed;
+}
+
+.pill-preview {
+  width: calc(var(--tap) * 0.75);
+  height: calc(var(--tap) * 0.75);
+}
+
+/* preview pill's voice is currently audible; the play icon stays hidden and
+   the button is accented until the sound finishes or is superseded */
+.pill-preview[data-playing="true"] {
+  color: var(--color-accent);
+  background: var(--color-sunken);
+}
+
+/* preview loading: spinner only (the play icon carries the hidden attribute),
+   full strength, never dimmed */
+.pill-preview[data-state="loading"] {
+  color: var(--color-ink);
+  cursor: progress;
+}
+
+/* ---------- cards, full hairline borders only ---------- */
+
+.card {
+  background: var(--color-surface);
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+
+/* ---------- library: the continue card is the one focal element ---------- */
+
+.continue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.continue-cover {
+  width: var(--cover-w);
+  height: auto;
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-sunken);
+}
+
+.continue-title {
+  /* display type, 3x body: the eye lands here first and nowhere else */
+  font-size: var(--step-display);
+  line-height: 1.05;
+  font-weight: normal;
+  margin: 0;
+  max-width: 14ch;
+  overflow-wrap: anywhere;
+}
+
+.continue-meta {
+  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: var(--step-0);
+}
+
+/* the display size is a hero size: below the widest breakpoint the card has
+   less room beside the cover, so the title steps down instead of wrapping into
+   one word per line */
+@media (max-width: 79.999rem) {
+  .continue-title { font-size: var(--step-3); line-height: 1.1; }
+}
+
+.continue-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.continue .btn--accent {
+  align-self: flex-start;
+  min-width: calc(var(--tap) * 3.5);
+}
+
+@media (min-width: 40rem) {
+  .continue {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-6);
+  }
+  .continue-cover { width: 13rem; }
+  .continue .btn--accent { margin-left: auto; }
+}
+
+/* wide screens: the card becomes a band across the page, cover left, title in
+   the middle, resume action at the right edge so nothing is left stranded */
+@media (min-width: 64rem) {
+  .continue {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-7);
+    padding: var(--space-7) var(--space-8);
+  }
+  .continue-cover { width: 16rem; }
+  .continue .btn--accent { margin-left: 0; min-width: 13rem; }
+}
+
+.empty-copy,
+.error-copy {
+  color: var(--color-ink-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+.error-copy { color: var(--color-danger); font-style: normal; }
+
+/* shelf */
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--thumb-w), 1fr));
+  gap: var(--space-5) var(--space-4);
+}
+
+@media (min-width: 40rem) {
+  .shelf { grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); }
+}
+
+/* wide screens: bigger covers and roomier gutters so the row reads as a shelf
+   rather than a strip of postage stamps */
+@media (min-width: 64rem) {
+  .shelf {
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: var(--space-6) var(--space-5);
+  }
+}
+
+.tile { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.tile-cover {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-sunken);
+}
+
+.tile-title {
+  font-size: var(--step-0);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.tile-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  min-height: var(--tap);
+}
+
+/* the badge takes whatever the two action buttons leave; the buttons never
+   shrink, and if the badge cannot fit beside them it moves to its own line
+   instead of being cut off mid-number */
+.tile-row > .icon-btn { flex: 0 0 auto; }
+.tile-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+/* preparing / interrupted badge: muted outline, tabular numerals so the
+   numbers growing never shift the layout */
+.tile-badge {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+  min-height: calc(var(--tap) * 0.5);
+  padding: 0 var(--space-2);
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  color: var(--color-ink-muted);
+  font-family: Verdana, "Segoe UI", sans-serif;
+  font-size: var(--step-n1);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* resume promise under a resumable tile's badge: muted, wraps anywhere */
+.tile-hint {
+  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: var(--step-n1);
+  overflow-wrap: anywhere;
+}
+
+/* job-control failure painted inline in the tile: the house .form-error,
+   tightened to tile scale, never a toast */
+.tile .form-error {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+}
+
+/* thin progress bar (readonly display element) */
+.progress {
+  height: calc(var(--pr-border) * 3);
+  border-radius: calc(var(--pr-radius) / 2);
+  background: var(--color-track);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: inherit;
+}
+
+.shelf-loading {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-ink-muted);
+  padding: var(--space-4) 0;
+}
+
+/* ---------- convert job panel ---------- */
+
+.convert-form {
+  padding: var(--space-4);
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+/* wide screens: the form uses the whole band — file picker across the top,
+   voice/quality side by side, gap and lexicon beside each other. The submit row
+   spans both columns so the primary action stays the last thing read. */
+@media (min-width: 64rem) {
+  .convert-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 0 var(--space-7);
+    align-items: start;
+    padding: var(--space-6);
+  }
+  .convert-form > .field--pdf,
+  .convert-form > .convert-actions,
+  .convert-form > .convert-note,
+  .convert-form > .form-error { grid-column: 1 / -1; }
+}
+
+.convert-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+
+/* requeue mode (P9): the book brings its own PDF, the file picker is not
+   needed; the note explains the mode where the picker stood */
+.convert-form--requeue > .field--pdf { display: none; }
+
+.convert-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  font-size: var(--step-n1);
+  color: var(--color-ink-muted);
+}
+
+.convert-note-title { display: block; color: var(--color-ink); }
+
+.job {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.job-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.job-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: Verdana, "Segoe UI", sans-serif;
+  font-size: var(--step-n1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.job.is-done .job-status { color: var(--color-accent); }
+.job.is-error .job-status { color: var(--color-danger); }
+/* a settled paused/cancelled panel rests muted: nothing about it is moving */
+.job.is-paused .job-status,
+.job.is-cancelled .job-status { color: var(--color-ink-muted); }
+
+.job-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-3) 0 0;
+  font-size: var(--step-n1);
+  font-variant-numeric: tabular-nums;
+}
+
+.job-counts dt { color: var(--color-ink-muted); margin-right: var(--space-1); }
+.job-counts dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+.job-message {
+  margin: var(--space-3) 0 0;
+  color: var(--color-ink-muted);
+  font-size: var(--step-n1);
+  max-height: 6em;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
+/* P6-C: the prominent "Your audiobook is preparing" card. Same surface as the
+   old job panel (it IS that panel, promoted) with an accent border so it is
+   obvious at a glance; only the pre-existing spinner animates. */
+.job--prepare {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-1);
+}
+
+.job-title {
+  margin: var(--space-2) 0 0;
+  font-size: var(--step-1);
+}
+
+.job-title-files {
+  display: block;
+  font-weight: normal;
+  font-size: var(--step-n1);
+  color: var(--color-ink-muted);
+  overflow-wrap: anywhere;
+}
+
+/* job done: compact state, no layout jump when the progress rows stay */
+.job.is-done .job-counts { color: var(--color-ink-muted); }
+
+/* fresh shelf entry after a conversion lands */
+.tile--fresh {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 6px;
+  border-radius: var(--radius);
+}
+
+/* ---------- player ---------- */
+
+.view--player {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.btn--back { align-self: flex-start; padding-left: 0; }
+
+.player-cover {
+  margin: 0 auto;
+  width: min(var(--cover-w), 70vw);
+}
+
+.player-cover img {
+  width: 100%;
+  display: block;
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--color-sunken);
+}
+
+@media (min-width: 40rem) {
+  .player-cover { width: 16rem; }
+}
+
+.player-meta { text-align: center; }
+
+.player-title {
+  font-size: var(--step-3);
+  font-weight: normal;
+  line-height: 1.1;
+  margin: 0 0 var(--space-2);
+  overflow-wrap: anywhere;
+}
+
+.player-chapter {
+  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: var(--step-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* live-mode status line under the chapter: text changes only, no spinner, no
+   layout shift (tabular numerals keep the width stable as counts grow) */
+.player-live-note {
+  margin: var(--space-1) 0 0;
+  color: var(--color-ink-muted);
+  font-size: var(--step-n1);
+  font-variant-numeric: tabular-nums;
+}
+
+.seek-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.time {
+  font-size: var(--step-n1);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+  min-width: 5ch;
+}
+
+input[type="range"].seek {
+  width: 100%;
+  min-height: var(--tap);
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"].seek::-webkit-slider-runnable-track {
+  height: var(--pr-space-1);
+  border-radius: calc(var(--pr-radius) / 3);
+  background: linear-gradient(
+    to right,
+    var(--color-accent) 0%,
+    var(--color-accent) var(--seek-pos, 0%),
+    var(--color-track) var(--seek-pos, 0%),
+    var(--color-track) 100%
+  );
+}
+
+input[type="range"].seek::-moz-range-track {
+  height: var(--pr-space-1);
+  border-radius: calc(var(--pr-radius) / 3);
+  background: linear-gradient(
+    to right,
+    var(--color-accent) 0%,
+    var(--color-accent) var(--seek-pos, 0%),
+    var(--color-track) var(--seek-pos, 0%),
+    var(--color-track) 100%
+  );
+}
+
+input[type="range"].seek::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: calc(var(--pr-icon) * 0.75);
+  height: calc(var(--pr-icon) * 0.75);
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: none;
+  margin-top: calc((var(--pr-icon) * -0.75 + 4px) / 2);
+}
+
+input[type="range"].seek::-moz-range-thumb {
+  width: calc(var(--pr-icon) * 0.75);
+  height: calc(var(--pr-icon) * 0.75);
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: none;
+}
+
+/* seek disabled while metadata loads, dimmed per the disabled rule only.
+   The buffering spinner on the play button is the loading state. */
+input[type="range"].seek:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.transport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+@media (min-width: 40rem) {
+  .transport { gap: var(--space-4); }
+}
+
+/* speed stepper + sleep timer */
+
+.player-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: var(--measure);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-top: var(--border) solid var(--color-line);
+}
+
+.row-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 8ch;
+  color: var(--color-ink-muted);
+  font-size: var(--step-n1);
+  font-family: Verdana, "Segoe UI", sans-serif;
+}
+
+.row-note { width: 100%; margin: 0; color: var(--color-ink-muted); font-variant-numeric: tabular-nums; }
+
+.stepper,
+.segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.stepper output {
+  min-width: 5ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.segmented { gap: 0; border: var(--border) solid var(--color-line-strong); border-radius: var(--radius); overflow: hidden; }
+
+.seg-btn {
+  min-height: calc(var(--tap) * 0.75);
+  padding: 0 var(--space-3);
+  border: none;
+  border-left: var(--border) solid var(--color-line);
+  background: transparent;
+  font: inherit;
+  font-size: var(--step-n1);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.segmented .seg-btn:first-child { border-left: none; }
+.seg-btn:hover { background: var(--color-sunken); }
+.seg-btn[aria-pressed="true"] { background: var(--color-accent); color: var(--color-on-accent); }
+.seg-btn[disabled] { color: var(--color-ink-muted); cursor: not-allowed; }
+
+/* bookmarks */
+
+.row-actions { display: flex; gap: var(--space-2); }
+
+.bm-form {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.bm-form input[type="text"] { flex: 1 1 12rem; width: auto; }
+
+.bm-list {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.bm-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: var(--border) solid var(--color-line);
+}
+
+.bm-item:first-child { border-top: none; }
+
+.bm-jump {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: var(--tap);
+  justify-content: center;
+  padding: 0 var(--space-2);
+  border: none;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--color-ink);
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.bm-jump:hover { background: var(--color-sunken); }
+
+.bm-jump .bm-label { overflow-wrap: anywhere; }
+
+.bm-jump .bm-pos {
+  font-size: var(--step-n1);
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* fallback cover, drawn from tokens only */
+.cover-fallback {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-sunken);
+  color: var(--color-ink-muted);
+  font-size: var(--step-2);
+}
+
+/* ---------- caption mode: only the sentence being read is on screen ---------- */
+
+.reading-pane {
+  padding: var(--space-4);
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.caption {
+  margin: 0;
+  font-size: var(--step-1); /* larger than body copy */
+  line-height: 1.75;
+  color: var(--color-ink);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- source PDF pane: the page being read, beside the player ----------
+   Mobile-first: the pane is the last block of the single column, below the
+   player-rows. From 64rem the player body becomes a two-column grid; the pane
+   takes the right column and sticks while the left column scrolls. The pane
+   body keeps a fixed height in every state, so loading never shifts layout. */
+
+.pdf-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.pdf-pane-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--icon); /* spinner appears without shifting the label */
+}
+
+.pdf-page-label {
+  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: var(--step-n1);
+  font-family: Verdana, "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdf-pane-body {
+  /* fills the window height less the topbar/back-link/head stack, so the page
+     is as large as the screen allows instead of a short letterbox */
+  height: clamp(20rem, calc(100vh - 10rem), 90rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* reserve the vertical scrollbar track: the fit-to-width render measures
+     clientWidth, and without a stable gutter the measurement happens before
+     the scrollbar appears, so the page lands ~15px too wide and grows a
+     horizontal scrollbar */
+  scrollbar-gutter: stable;
+  padding: var(--space-3);
+  border: var(--border) solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+#pdf-canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+.pdf-error {
+  margin: 0;
+  color: var(--color-ink-muted);
+}
+
+@media (min-width: 64rem) {
+  #player-body {
+    display: grid;
+    /* the PDF gets the larger share: it is the page the user is reading */
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    column-gap: clamp(var(--space-5), 2.5vw, var(--space-8));
+    row-gap: 0; /* the left column keeps today's exact spacing */
+    align-items: start;
+  }
+
+  .player-cover { width: 20rem; }
+
+  #player-body > .player-cover,
+  #player-body > .player-meta,
+  #player-body > .seek-row,
+  #player-body > .transport,
+  #player-body > .reading-pane,
+  #player-body > .player-rows {
+    grid-column: 1;
+  }
+
+  #pdf-pane {
+    grid-column: 2;
+    grid-row: 1 / span 9;
+    position: sticky;
+    top: var(--space-4);
+    margin-top: 0;
+  }
+}

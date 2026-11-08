@@ -1,0 +1,173 @@
+/* audiobookey design tokens
+   DTCG 3-tier tokens, rendered as CSS variables (the @theme layer).
+   Tier 1: primitives (raw values, never used directly in app.css)
+   Tier 2: semantic (purpose aliases; the only tier app.css may consume)
+   Tier 3: component (named component slots, derive from tier 2)
+   One theme: light and dark resolve from the same semantic tokens via
+   prefers-color-scheme plus a manual override on <html data-theme>. */
+
+:root {
+  /* ------- tier 1: primitives, light palette ------- */
+  --pr-light-paper: #f7f1e5;
+  --pr-light-raised: #fbf7ee;
+  --pr-light-sunken: #efe6d4;
+  --pr-light-ink: #292118;
+  --pr-light-muted: #6d6154;
+  --pr-light-line: #d8cdb8;
+  --pr-light-accent: #7c3a12;
+  --pr-light-on-accent: #f8f1e2;
+  --pr-light-danger: #8a2a12;
+  --pr-light-on-danger: #f8f1e2;
+
+  /* ------- tier 1: primitives, dark palette ------- */
+  --pr-dark-paper: #181410;
+  --pr-dark-raised: #241d15;
+  --pr-dark-sunken: #100d09;
+  --pr-dark-ink: #efe6d5;
+  --pr-dark-muted: #a89a85;
+  --pr-dark-line: #3b3327;
+  --pr-dark-accent: #d8804a;
+  --pr-dark-on-accent: #1b1108;
+  --pr-dark-danger: #e26a58;
+  --pr-dark-on-danger: #1b1108;
+
+  /* ------- tier 1: static primitives ------- */
+  --pr-radius: 6px;
+  --pr-radius-lg: 12px;
+  --pr-border: 1px;
+  --pr-dur-fast: 120ms;
+  --pr-dur-base: 200ms;
+  --pr-dur-slow: 320ms;
+  --pr-ease: cubic-bezier(0.3, 0, 0.2, 1);
+  --pr-shadow-rest: 0 1px 2px rgb(41 33 24 / 0.12);
+  --pr-shadow-raised: 0 4px 16px rgb(41 33 24 / 0.16);
+  --pr-shadow-rest-dark: 0 1px 2px rgb(0 0 0 / 0.5);
+  --pr-shadow-raised-dark: 0 4px 16px rgb(0 0 0 / 0.6);
+
+  /* ------- tier 1: type scale, Major Third on 1rem ------- */
+  --pr-step-0: 1rem;
+  --pr-step-n1: 0.8125rem;
+  --pr-step-1: 1.25rem;
+  --pr-step-2: 1.5625rem;
+  --pr-step-3: 1.953rem;
+  --pr-step-4: 2.441rem;
+  --pr-step-display: 3rem; /* 3x body, the display size */
+  --pr-measure: 68ch;
+
+  /* ------- tier 1: spacing rhythm, 4px base ------- */
+  --pr-space-1: 4px;
+  --pr-space-2: 8px;
+  --pr-space-3: 12px;
+  --pr-space-4: 16px;
+  --pr-space-5: 24px;
+  --pr-space-6: 32px;
+  --pr-space-7: 48px;
+  --pr-space-8: 64px;
+  --pr-space-9: 96px;
+
+  /* ------- tier 1: sizing ------- */
+  --pr-tap: 44px;
+  --pr-icon: 24px;
+  --pr-cover-w: 9rem;
+  --pr-thumb-w: 6.5rem;
+
+  /* ------- semantic tokens resolve first to light ------- */
+  --color-bg: var(--pr-light-paper);
+  --color-surface: var(--pr-light-raised);
+  --color-sunken: var(--pr-light-sunken);
+  --color-ink: var(--pr-light-ink);
+  --color-ink-muted: var(--pr-light-muted);
+  --color-line: var(--pr-light-line);
+  --color-accent: var(--pr-light-accent);
+  --color-on-accent: var(--pr-light-on-accent);
+  --color-danger: var(--pr-light-danger);
+  --color-on-danger: var(--pr-light-on-danger);
+  --color-track: var(--pr-light-sunken);
+  --color-line-strong: var(--pr-light-muted);
+  --shadow-1: var(--pr-shadow-rest);
+  --shadow-2: var(--pr-shadow-raised);
+
+  /* ------- tier 2: aliases, theme-independent slots ------- */
+  --space-1: var(--pr-space-1);
+  --space-2: var(--pr-space-2);
+  --space-3: var(--pr-space-3);
+  --space-4: var(--pr-space-4);
+  --space-5: var(--pr-space-5);
+  --space-6: var(--pr-space-6);
+  --space-7: var(--pr-space-7);
+  --space-8: var(--pr-space-8);
+  --space-9: var(--pr-space-9);
+  --step-n1: var(--pr-step-n1);
+  --step-0: var(--pr-step-0);
+  --step-1: var(--pr-step-1);
+  --step-2: var(--pr-step-2);
+  --step-3: var(--pr-step-3);
+  --step-4: var(--pr-step-4);
+  --step-display: var(--pr-step-display);
+  --measure: var(--pr-measure);
+  --radius: var(--pr-radius);
+  --radius-lg: var(--pr-radius-lg);
+  --border: var(--pr-border);
+  --dur-fast: var(--pr-dur-fast);
+  --dur-base: var(--pr-dur-base);
+  --dur-slow: var(--pr-dur-slow);
+  --ease: var(--pr-ease);
+  --tap: var(--pr-tap);
+  --icon: var(--pr-icon);
+  --cover-w: var(--pr-cover-w);
+  --thumb-w: var(--pr-thumb-w);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: var(--pr-dark-paper);
+    --color-surface: var(--pr-dark-raised);
+    --color-sunken: var(--pr-dark-sunken);
+    --color-ink: var(--pr-dark-ink);
+    --color-ink-muted: var(--pr-dark-muted);
+    --color-line: var(--pr-dark-line);
+    --color-accent: var(--pr-dark-accent);
+    --color-on-accent: var(--pr-dark-on-accent);
+    --color-danger: var(--pr-dark-danger);
+    --color-on-danger: var(--pr-dark-on-danger);
+    --color-track: var(--pr-dark-sunken);
+    --color-line-strong: var(--pr-dark-muted);
+    --shadow-1: var(--pr-shadow-rest-dark);
+    --shadow-2: var(--pr-shadow-raised-dark);
+  }
+}
+
+/* manual override wins over the media query, both directions */
+:root[data-theme="dark"] {
+  --color-bg: var(--pr-dark-paper);
+  --color-surface: var(--pr-dark-raised);
+  --color-sunken: var(--pr-dark-sunken);
+  --color-ink: var(--pr-dark-ink);
+  --color-ink-muted: var(--pr-dark-muted);
+  --color-line: var(--pr-dark-line);
+  --color-accent: var(--pr-dark-accent);
+  --color-on-accent: var(--pr-dark-on-accent);
+  --color-danger: var(--pr-dark-danger);
+  --color-on-danger: var(--pr-dark-on-danger);
+  --color-track: var(--pr-dark-sunken);
+  --color-line-strong: var(--pr-dark-muted);
+  --shadow-1: var(--pr-shadow-rest-dark);
+  --shadow-2: var(--pr-shadow-raised-dark);
+}
+
+:root[data-theme="light"] {
+  --color-bg: var(--pr-light-paper);
+  --color-surface: var(--pr-light-raised);
+  --color-sunken: var(--pr-light-sunken);
+  --color-ink: var(--pr-light-ink);
+  --color-ink-muted: var(--pr-light-muted);
+  --color-line: var(--pr-light-line);
+  --color-accent: var(--pr-light-accent);
+  --color-on-accent: var(--pr-light-on-accent);
+  --color-danger: var(--pr-light-danger);
+  --color-on-danger: var(--pr-light-on-danger);
+  --color-track: var(--pr-light-sunken);
+  --color-line-strong: var(--pr-light-muted);
+  --shadow-1: var(--pr-shadow-rest);
+  --shadow-2: var(--pr-shadow-raised);
+}

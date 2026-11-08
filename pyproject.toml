@@ -1,0 +1,68 @@
+[project]
+name = "audiobookey"
+version = "0.1.0"
+description = "Local PDF-to-audiobook pipeline (P1: CLI, Kokoro-82M ONNX, m4b/mp3)"
+readme = "README.md"
+authors = [
+    { name = "Fatey96", email = "rajwardhan714@gmail.com" }
+]
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "pymupdf>=1.24",
+    "kokoro-onnx>=0.4.9",
+    "rich>=13.0",
+    # Chatterbox (final quality); torch via the CUDA 12.6 wheel index below.
+    # Both engine stacks are co-installable.
+    "chatterbox-tts>=0.1.4",
+    "torch>=2.6,<2.9",
+    "torchaudio>=2.6,<2.9",
+    "huggingface_hub>=0.34",
+    # resemble-perth (chatterbox dep) needs pkg_resources, removed from
+    # setuptools 81+; pin the last series that still ships it.
+    "setuptools>=75,<81",
+    # CUDA 12 GPU stack for Windows (onnxruntime-gpu>=1.23 needs CUDA 13,
+    # which does not have complete Windows wheels yet). cuBLAS 12 has no
+    # Windows wheel at all, so its broken transitive requirement is dropped
+    # via the override below and engine.py registers DLL dirs from CUDA
+    # toolkit / torch installs / AUDIOBOOKEY_CUDA_DLL_DIR instead.
+    "onnxruntime-gpu==1.22.0; platform_system == 'Windows'",
+    "nvidia-cudnn-cu12>=9.3; platform_system == 'Windows'",
+    "nvidia-cuda-runtime-cu12>=12.6; platform_system == 'Windows'",
+    "nvidia-cufft-cu12>=11.0.3; platform_system == 'Windows'",
+    "fastapi>=0.162.0",
+    "uvicorn>=0.30",
+    "python-multipart>=0.0.33",
+]
+
+[project.scripts]
+audiobookey = "audiobookey.cli:main"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8.0",
+]
+
+[project.optional-dependencies]
+# OCR for scanned PDFs (P4-A): tesseract is a system binary, NOT installed
+# by this extra; check `tesseract --version` first.
+ocr = ["pytesseract>=0.3.10", "pillow>=10.0"]
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+# nvidia-cudnn-cu12's Windows wheel requires nvidia-cublas-cu12, which has no
+# Windows wheel upstream; restrict that requirement to Linux where it exists.
+override-dependencies = ["nvidia-cublas-cu12; sys_platform == 'linux'"]
+
+[[tool.uv.index]]
+# PyPI Windows torch wheels are CPU-only; CUDA wheels come from the pytorch index.
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
+torchaudio = { index = "pytorch-cu126" }

@@ -1,0 +1,52 @@
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# build
+dist/
+build/
+*.egg-info/
+
+# user runtime data (db, voices, clones, uploads, outputs)
+data/
+
+# large model weights, fetched separately
+models/
+
+# pipeline outputs
+out*/
+scratchpad/
+.tmp_p*/
+
+# generated media
+*.m4b
+*.mp3
+*.wav
+
+# logs
+server*.log
+p2-sync.log
+.vibe-*
+.p7-*
+.hold-lock.*
+
+# db
+*.db
+*.db.bak*
+
+# temp dirs / pytest
+tmp*/
+pytest-of-*/
+.pytest_cache/
+
+# scratch / debris
+scratch_*.pdf
+testbook.pdf
+counter-debug.pdf
+p7-*.pdf
+preview-*.wav
+batch-resp*.json

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audiobookey</title>
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./app.css?v=24">
+</head>
+<body>
+
+<svg hidden aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a.6.6 0 0 0 .92.5l10.2-6.5a.6.6 0 0 0 0-1L8.92 5a.6.6 0 0 0-.92.5Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+    <symbol id="i-back-15" viewBox="0 0 24 24"><path d="M11 4.5 6 8l5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 8H14a6.5 6.5 0 1 1-6.4 7.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><text x="9.4" y="18.2" font-size="6.5" fill="currentColor" font-family="inherit">15</text></symbol>
+    <symbol id="i-fwd-15" viewBox="0 0 24 24"><path d="M13 4.5 18 8l-5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 8H10a6.5 6.5 0 1 0 6.4 7.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><text x="9.4" y="18.2" font-size="6.5" fill="currentColor" font-family="inherit">15</text></symbol>
+    <symbol id="i-prev-chapter" viewBox="0 0 24 24"><path d="M11 12 5.5 7.5v9L11 12Zm7 0-5.5-4.5v9L18 12Z" transform="translate(0,0)"/><path d="M11 7.5v9M18 7.5v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0"/><path d="M16.5 7.5 11 12l5.5 4.5Z"/></symbol>
+    <symbol id="i-next-chapter" viewBox="0 0 24 24"><path d="M13 12l5.5-4.5v9L13 12Z"/><path d="M7.5 7.5 13 12l-5.5 4.5Z"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M7 4.5h10a.8.8 0 0 1 .8.8V20l-5.8-3.4L6.2 20V5.3a.8.8 0 0 1 .8-.8Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bookmark-solid" viewBox="0 0 24 24"><path d="M7 4.5h10a.8.8 0 0 1 .8.8V20l-5.8-3.4L6.2 20V5.3a.8.8 0 0 1 .8-.8Z"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v2M12 19v2M21 12h-2M5 12H3M18.4 5.6l-1.4 1.4M7 17l-1.4 1.4M18.4 18.4 17 17M7 7 5.6 5.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5m0 0L7.5 9.5M12 5l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 15.5v3a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 10v3.5M10 2.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.5 2.8 20h18.4L12 4.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10.5v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.1"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V7m3.5 0-.8 12a1 1 0 0 1-1 .9H8.3a1 1 0 0 1-1-.9L6.5 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v5M14 11v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="40 14" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-requeue" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 8.5-8.5c-2.4 0-4.6 1-6.2 2.7L3.5 8.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 3.5v4.9h4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <a class="brand" href="#/">Audiobookey</a>
+  <button id="theme-toggle" class="flip-switch" type="button" aria-label="Switch color scheme" aria-pressed="false">
+    <span class="flip-knob" aria-hidden="true">
+      <svg class="icon flip-icon flip-icon--moon" width="24" height="24" aria-hidden="true"><use href="#i-moon"/></svg>
+      <svg class="icon flip-icon flip-icon--sun" width="24" height="24" aria-hidden="true"><use href="#i-sun"/></svg>
+    </span>
+  </button>
+</header>
+
+<main id="view-library" class="view">
+  <h1 class="page-title">Library</h1>
+
+  <section id="continue-slot" aria-labelledby="continue-heading">
+    <h2 id="continue-heading" class="eyebrow">Continue listening</h2>
+    <div id="continue-body">
+      <p class="empty-copy" id="continue-empty">Nothing in progress yet. Pick up a book from the shelf, or add one below.</p>
+    </div>
+  </section>
+
+  <section id="convert-section" aria-labelledby="convert-heading">
+    <h2 id="convert-heading" class="eyebrow">Add a book</h2>
+    <div id="convert-trigger-row">
+      <button id="convert-open" class="btn btn--secondary" type="button">
+        <svg class="icon" width="24" height="24" aria-hidden="true"><use href="#i-upload"/></svg>
+        Upload a PDF
+      </button>
+    </div>
+    <form id="convert-form" class="convert-form" hidden novalidate>
+      <p class="convert-note" id="conv-requeue-note" hidden role="status">
+        <svg class="icon" width="24" height="24" aria-hidden="true"><use href="#i-requeue"/></svg>
+        <span><span class="convert-note-title" id="conv-requeue-title"></span> The original PDF is reused and the finished pages come back from the cache. Choose the voice and quality, then Requeue.</span>
+      </p>
+      <div class="field field--pdf">
+        <label for="conv-pdf">PDF file</label>
+        <div class="file-field">
+          <input type="file" id="conv-pdf" name="pdf" accept="application/pdf" multiple required class="file-input">
+          <label for="conv-pdf" class="btn btn--secondary file-btn">
+            <svg class="icon" width="24" height="24" aria-hidden="true"><use href="#i-upload"/></svg>
+            Choose files
+          </label>
+          <span class="file-name" id="conv-pdf-name">No files chosen</span>
+        </div>
+        <p class="field-hint">One or more PDFs. Several files convert together as a single batch job.</p>
+        <p class="field-error" id="conv-pdf-error" hidden>Choose a PDF file to convert.</p>
+      </div>
+      <fieldset class="choice-group">
+        <legend>Voice</legend>
+        <div id="conv-voices" class="pills" role="radiogroup" aria-label="Voice"></div>
+      </fieldset>
+      <fieldset class="choice-group">
+        <legend>Quality</legend>
+        <div id="conv-quality" class="pills" role="radiogroup" aria-label="Quality"></div>
+      </fieldset>
+      <div class="field">
+        <label for="conv-gap">Sentence gap (seconds)</label>
+        <input type="number" id="conv-gap" name="gap" min="0" step="0.1" value="0.2" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="conv-lexicon">Lexicon (optional, word replacements)</label>
+        <textarea id="conv-lexicon" name="lexicon_text" rows="3" placeholder="one substitution per line"></textarea>
+        <p class="field-hint">Lines like "AI: A I", one word pair per line.</p>
+      </div>
+      <div class="field field--check">
+        <input type="checkbox" id="conv-ocr" name="ocr" value="true">
+        <label for="conv-ocr">Run OCR on scanned pages</label>
+      </div>
+      <div class="convert-actions">
+        <button type="submit" class="btn btn--accent" id="conv-submit">
+          <span class="btn-label">Convert</span>
+          <svg class="icon spin" width="24" height="24" aria-hidden="true"><use href="#i-spinner"/></svg>
+        </button>
+        <button type="button" class="btn btn--ghost" id="conv-cancel">Cancel</button>
+      </div>
+      <p class="form-error" id="conv-error" role="alert" hidden></p>
+    </form>
+    <div id="convert-jobs" aria-live="polite"></div>
+  </section>
+
+  <section id="shelf-section" aria-labelledby="shelf-heading">
+    <h2 id="shelf-heading" class="eyebrow">On the shelf</h2>
+    <div id="shelf" class="shelf">
+      <div class="shelf-loading" id="shelf-loading">
+        <svg class="icon spin" width="24" height="24" aria-hidden="true"><use href="#i-spinner"/></svg>
+        <span>Loading library</span>
+      </div>
+      <p class="empty-copy" id="shelf-empty" hidden>The shelf is empty. Upload a PDF to start your first book.</p>
+      <p class="error-copy" id="shelf-error" role="alert" hidden>The library could not be loaded. <button type="button" class="link-btn" id="shelf-retry">Try again</button></p>
+    </div>
+  </section>
+</main>
+
+<main id="view-player" class="view view--player" hidden>
+  <a class="btn btn--ghost btn--back" href="#/">
+    <svg class="icon" width="24" height="24" aria-hidden="true"><use href="#i-back"/></svg>
+    Library
+  </a>
+  <p class="error-copy" id="player-error" role="alert" hidden><span id="player-error-text">This book is not available.</span> <a class="link" href="#/">Back to the library.</a></p>
+
+  <div id="player-body">
+    <figure class="player-cover">
+      <img id="pl-cover" alt="">
+    </figure>
+    <div class="player-meta">
+      <h1 id="pl-title" class="player-title"></h1>
+      <p id="pl-chapter" class="player-chapter"></p>
+      <p id="pl-live-note" class="player-live-note" aria-live="polite" hidden></p>
+    </div>
+
+    <div class="seek-row">
+      <span id="pl-time-cur" class="time">0:00:00</span>
+      <input type="range" id="pl-seek" min="0" max="1000" value="0" step="1" aria-label="Seek within the book">
+      <span id="pl-time-total" class="time">0:00:00</span>
+    </div>
+
+    <div class="transport">
+      <button class="icon-btn" id="pl-skip-back" type="button" aria-label="Back 15 seconds" title="Back 15 seconds">
+        <svg class="icon icon-lg" width="24" height="24" aria-hidden="true"><use href="#i-back-15"/></svg>
+      </button>
+      <button class="icon-btn" id="pl-prev-chapter" type="button" aria-label="Previous chapter">
+        <svg class="icon icon-lg" width="24" height="24" aria-hidden="true"><use href="#i-prev-chapter"/></svg>
+      </button>
+      <button class="btn btn--accent btn--play" id="pl-play" type="button" aria-label="Play">
+        <span id="pl-play-label" class="visually-hidden">Play</span>
+        <svg class="icon icon-play" width="24" height="24" aria-hidden="true"><use href="#i-play"/></svg>
+        <svg class="icon icon-pause" width="24" height="24" aria-hidden="true"><use href="#i-pause"/></svg>
+        <svg class="icon spin" id="pl-buffer" width="24" height="24" aria-hidden="true" hidden><use href="#i-spinner"/></svg>
+      </button>
+      <button class="icon-btn" id="pl-next-chapter" type="button" aria-label="Next chapter">
+        <svg class="icon icon-lg" width="24" height="24" aria-hidden="true"><use href="#i-next-chapter"/></svg>
+      </button>
+      <button class="icon-btn" id="pl-skip-fwd" type="button" aria-label="Forward 15 seconds" title="Forward 15 seconds">
+        <svg class="icon icon-lg" width="24" height="24" aria-hidden="true"><use href="#i-fwd-15"/></svg>
+      </button>
+    </div>
+
+    <section id="reading-pane" class="reading-pane" hidden aria-label="Caption for the sentence being read">
+      <p id="caption" class="caption"></p>
+    </section>
+
+    <div class="player-rows">
+      <div class="row">
+        <span class="row-label" id="speed-label">Speed</span>
+        <div class="stepper" role="group" aria-labelledby="speed-label">
+          <button class="icon-btn" id="speed-down" type="button" aria-label="Slower"><span aria-hidden="true">&minus;</span></button>
+          <output id="speed-value" for="speed-down speed-up">1.00x</output>
+          <button class="icon-btn" id="speed-up" type="button" aria-label="Faster"><span aria-hidden="true">+</span></button>
+        </div>
+      </div>
+      <div class="row">
+        <span class="row-label" id="sleep-label">
+          <svg class="icon" width="24" height="24" aria-hidden="true"><use href="#i-timer"/></svg>
+          Sleep timer
+        </span>
+        <div id="sleep-options" class="segmented" role="group" aria-labelledby="sleep-label">
+          <button class="seg-btn" type="button" data-minutes="15">15 min</button>
+          <button class="seg-btn" type="button" data-minutes="30">30 min</button>
+          <button class="seg-btn" type="button" data-minutes="60">60 min</button>
+          <button class="seg-btn" type="button" data-minutes="0">Off</button>
+        </div>
+        <p id="sleep-countdown" class="row-note" aria-live="polite" hidden></p>
+      </div>
+      <div class="row">
+        <span class="row-label">Bookmark</span>
+        <div class="row-actions">
+          <button class="btn btn--secondary" id="bm-add" type="button">
+            <svg class="icon" width="24" height="24" aria-hidden="true"><use href="#i-bookmark"/></svg>
+            Add here
+          </button>
+        </div>
+        <form id="bm-form" class="bm-form" hidden>
+          <label class="visually-hidden" for="bm-label">Bookmark label</label>
+          <input type="text" id="bm-label" placeholder="What happens here?">
+          <button type="submit" class="btn btn--accent" id="bm-save">Save</button>
+          <button type="button" class="btn btn--ghost" id="bm-cancel">Cancel</button>
+          <p class="field-error" id="bm-error" hidden>Give the bookmark a label.</p>
+        </form>
+        <ul id="bm-list" class="bm-list"></ul>
+      </div>
+    </div>
+
+    <section id="pdf-pane" class="pdf-pane" hidden aria-label="Source PDF page">
+      <header class="pdf-pane-head">
+        <p id="pdf-page-label" class="pdf-page-label" aria-live="polite">Page — of —</p>
+        <svg id="pdf-spinner" class="icon spin" width="24" height="24" aria-hidden="true" hidden><use href="#i-spinner"/></svg>
+      </header>
+      <div id="pdf-pane-body" class="pdf-pane-body">
+        <canvas id="pdf-canvas" aria-hidden="true" hidden></canvas>
+        <p id="pdf-error" class="pdf-error" hidden>This page could not be shown.</p>
+      </div>
+    </section>
+  </div>
+
+  <audio id="audio" preload="metadata"></audio>
+</main>
+
+<script src="./vendor/pdfjs/pdf.min.js?v=10" defer></script>
+<script type="module" src="./app.js?v=24"></script>
+<!-- ?v=N cache-buster: bump N whenever app.js/app.css change, or browsers
+     keep serving a stale bundle and "fixed" bugs reappear. A no-cache header
+     for these files lands with the next server restart. -->
+</body>
+</html>
